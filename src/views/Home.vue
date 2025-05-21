@@ -16,7 +16,7 @@
             <!-- Список существующих дорог -->
             <div class="roads-list">
                 <h2>Список дорог</h2>
-                <div v-if="roads.length === 0" class="empty-list">
+                <div v-if="roads.length === 0 || true" class="empty-list">
                     Нет добавленных дорог
                 </div>
                 <ul v-else>
@@ -117,7 +117,7 @@ export default defineComponent({
         addNewRoad(): void {
             if (this.newRoad.name && this.newRoad.description && this.newRoad.length && this.newRoad.region) {
                 this.roads.push({
-                    id: Date.now(),
+                    id: Math.max(...this.roads.map(road => road.id)),
                     name: this.newRoad.name,
                     description: this.newRoad.description,
                     length: this.newRoad.length,
