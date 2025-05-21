@@ -25,7 +25,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
           // Перенаправление после успешной авторизации
           this.$router.push('/home')
         }
-        else throw error
+        else throw Error()
       } catch (err) {
         this.error = 'Ошибка входа'
       } finally {

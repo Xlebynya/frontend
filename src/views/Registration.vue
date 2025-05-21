@@ -34,7 +34,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
@@ -64,7 +64,7 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 1000))
         this.$router.push('/login')
 
-      } catch (err) {
+      } catch (err: any) {
         this.error = err.message || 'Ошибка регистрации'
       } finally {
         this.loading = false
