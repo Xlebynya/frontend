@@ -49,28 +49,44 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      this.loading = true
-      this.error = ''
+      this.loading = true;
+      this.error = '';
 
       try {
-        // Здесь должна быть логика авторизации, например:
-        // const response = await authService.login(this.email, this.password)
-        // this.$store.commit('setUser', response.user)
-        // this.$router.push('/dashboard')
-        if (this.password != this.submitpassword) {
-          throw new Error("Пароли не совпадают")
+        if (this.password !== this.submitpassword) {
+          throw new Error("Пароли не совпадают");
         }
-        // Для примера просто имитируем задержку
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        this.$router.push('/login')
+
+        // Проверяем, есть ли уже пользователь с таким email
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const userExists = users.some((user: any) => user.email === this.email);
+
+        if (userExists) {
+          throw new Error("Пользователь с таким email уже существует");
+        }
+
+        // Создаем нового пользователя
+        const newUser = {
+          name: this.name,
+          surname: this.surname,
+          email: this.email,
+          password: this.password, // В реальном приложении пароль должен хешироваться!
+        };
+
+        // Добавляем в "базу данных" (localStorage)
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Переходим на страницу входа
+        this.$router.push('/login');
 
       } catch (err: any) {
-        this.error = err.message || 'Ошибка регистрации'
+        this.error = err.message || 'Ошибка регистрации';
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
-    async handleLogin() {
+    handleLogin() {
       this.$router.push('/login')
     }
   }

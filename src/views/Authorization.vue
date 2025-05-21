@@ -1,7 +1,7 @@
 <template>
   <div class="auth-container">
     <h2>Авторизация</h2>
-    <form @submit.prevent="handleSubmit" class="auth-form">
+    <form @submit.prevent="handleLogin" class="auth-form">
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" v-model="email" required placeholder="Введите ваш email">
@@ -17,7 +17,7 @@
         Зарегистрироваться
       </button>
 
-      <div v-show="error" class="error-message">
+      <div v-show="error !== ''" class="error-message">
         {{ error }}
       </div>
     </form>
@@ -36,29 +36,22 @@ export default {
     }
   },
   methods: {
-    async handleSubmit() {
-      this.loading = true
-      this.error = ''
+    async handleLogin() {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(
+        (u: any) => u.email === this.email && u.password === this.password
+      );
 
-      try {
-        // Здесь должна быть логика авторизации, например:
-        // const response = await authService.login(this.email, this.password)
-        // this.$store.commit('setUser', response.user)
-        // this.$router.push('/dashboard')
-        if (this.password == '123') {
-          // Для примера просто имитируем задержку
-          await new Promise(resolve => setTimeout(resolve, 1000))
-
-          // Перенаправление после успешной авторизации
-          this.$router.push('/home')
-        }
-        else throw Error()
-      } catch (err) {
-        this.error = 'Ошибка входа'
-      } finally {
-        this.loading = false
+      if (!user) {
+        this.error = "Неверный email или пароль";
+        return;
       }
+
+      // В реальном приложении здесь может быть JWT-токен
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      this.$router.push('/home');
     },
+
     async handleReg() {
       this.$router.push('/reg')
     },

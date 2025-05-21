@@ -2,7 +2,7 @@
     <div style="width: 600px;">
         <!-- Шапка с кнопкой выхода -->
         <header class="app-header">
-            <h1>Имя Фамилия</h1>
+            <h1>{{ name }} {{ surname }}</h1>
             <button @click="$router.push('/login')" class="logout-btn">
                 Выйти
             </button>
@@ -16,7 +16,7 @@
             <!-- Список существующих дорог -->
             <div class="roads-list">
                 <h2>Список дорог</h2>
-                <div v-if="roads.length === 0 || true" class="empty-list">
+                <div v-if="roads.length === 0 || password !== '123'" class="empty-list">
                     Нет добавленных дорог
                 </div>
                 <ul v-else>
@@ -91,6 +91,10 @@ export default defineComponent({
 
     data() {
         return {
+            name: '',
+            surname: '',
+            email: '',
+            password: '',
             showAddModal: false,
             newRoad: {
                 name: '',
@@ -107,7 +111,17 @@ export default defineComponent({
             }] as Road[]
         }
     },
-
+    created() {
+        // Можно также загружать другие данные, если нужно
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            const user = JSON.parse(savedUser);
+            this.surname = user.surname || '';
+            this.name = user.name || '';
+            this.password = user.password || '';
+            // и т.д.
+        }
+    },
     methods: {
         handleLogout(): void {
             const router = useRouter()
