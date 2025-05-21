@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Authorization from '@/views/Authorization.vue'
 import Registration from '@/views/Registration.vue'
 import Home from '@/views/Home.vue'
+import Road from '@/views/Road.vue'
+import Forecasts from '@/views/Forecasts.vue'
 
 const routes = [
   {
@@ -22,6 +24,20 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
+    meta: { requiresAuth: true }, // Требует авторизации
+  },
+  {
+    path: '/road/:id', // Динамический параметр `id`
+    name: 'road', // Имя маршрута (для удобства)
+    component: Road, // Компонент, который отобразится
+    props: true, // Передавать параметр как props (опционально)
+    meta: { requiresAuth: true }, // Требует авторизации
+  },
+  {
+    path: '/forecasts/:id',
+    name: 'Forecasts',
+    component: Forecasts,
+    props: true,
     meta: { requiresAuth: true }, // Требует авторизации
   },
 ]

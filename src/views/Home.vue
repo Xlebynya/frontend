@@ -3,7 +3,7 @@
         <!-- Шапка с кнопкой выхода -->
         <header class="app-header">
             <h1>Имя Фамилия</h1>
-            <button @click="handleLogout" class="logout-btn">
+            <button @click="$router.push('/login')" class="logout-btn">
                 Выйти
             </button>
         </header>
@@ -20,14 +20,17 @@
                     Нет добавленных дорог
                 </div>
                 <ul v-else>
-                    <li v-for="(road, index) in roads" :key="road.id" class="road-item"
-                        @click="$router.push('/road/' + road.id)">
-                        <div class="road-info">
+                    <li v-for="(road, index) in roads" :key="road.id" class="road-item">
+                        <div class="road-info" @click="$router.push('/road/' + road.id)">
                             <h3>{{ road.name }}</h3>
                             <p><strong>Длина:</strong> {{ road.length }} км</p>
                             <p><strong>Регион:</strong> {{ road.region }}</p>
                         </div>
-                        <button @click="removeRoad(index)" class="remove-btn">Удалить</button>
+                        <div style="width: 30%;">
+                            <button @click="$router.push('/forecasts/' + road.id)" class="add-btn"
+                                style="width: 100%; margin-bottom: 5px;">Прогнозы</button>
+                            <button @click="removeRoad(index)" class="remove-btn" style="width: 100%;">Удалить</button>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -187,7 +190,7 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 350px;
+    width: 400px;
     padding: 15px;
     margin-bottom: 15px;
     background: white;
@@ -199,6 +202,7 @@ export default defineComponent({
     margin: 0 0 10px 0;
     color: #333;
 }
+
 
 .road-info p {
     margin: 5px 0;
