@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             history: [{
-                'date': '2025-05-03',
+                'date': '2025-01-02',
                 'path': '/report-example.xlsx',
                 'ready': true,
             }] as ForecastHistory[],
@@ -62,7 +62,7 @@ export default {
 
                 // Добавляем в историю (пример)
                 this.history.unshift({
-                    date: new Date().toJSON().slice(0, 10),
+                    date: new Date('02.05.2025').toJSON().slice(0, 10),
                     path: "/report-new-example.xlsx", // В реальном приложении это будет путь от сервера
                     ready: false,
                 });

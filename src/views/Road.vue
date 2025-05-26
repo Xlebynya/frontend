@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { defineComponent } from 'vue'
-import { useRoute } from 'vue-router';
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
-const roadId = route.params.id; // Получаем `id` из URL (/road/123 → 123)
+const router = useRouter();
+const roadId = Number(route.params.id); // Получаем `id` из URL (/road/123 → 123)
 
 interface Road {
     id: number
@@ -13,14 +14,60 @@ interface Road {
     region: string
 }
 
-const road = {
-    'id': 1,
-    'name': 'А-289',
-    'description': "Краснодар-Керч Скоростная дорога, открытая в декабре 2024 года",
-    'length': '180',
-    'region': 'Краснодар-Керч'
-};
+const road = ref<Road>({
+    id: 0,
+    name: '',
+    description: '',
+    length: '',
+    region: ''
+});
 
+// Загружаем данные дороги при монтировании компонента
+onMounted(() => {
+    loadRoadData();
+});
+
+function loadRoadData() {
+    // Получаем все дороги из localStorage
+    const savedRoads = localStorage.getItem('roads');
+    if (savedRoads) {
+        const roads: Road[] = JSON.parse(savedRoads);
+        const foundRoad = roads.find(r => r.id === roadId);
+        if (foundRoad) {
+            road.value = { ...foundRoad };
+        }
+    }
+}
+
+function saveRoad() {
+    // Получаем текущий список дорог
+    const savedRoads = localStorage.getItem('roads');
+    let roads: Road[] = [];
+    
+    if (savedRoads) {
+        roads = JSON.parse(savedRoads);
+        
+        // Находим индекс редактируемой дороги
+        const index = roads.findIndex(r => r.id === roadId);
+        
+        if (index !== -1) {
+            // Обновляем данные дороги
+            roads[index] = { ...road.value };
+        } else {
+            // Если дорога не найдена, добавляем новую (на случай, если id был изменен)
+            roads.push({ ...road.value });
+        }
+    } else {
+        // Если дорог еще нет, создаем новый массив с текущей дорогой
+        roads = [{ ...road.value }];
+    }
+    
+    // Сохраняем обновленный список
+    localStorage.setItem('roads', JSON.stringify(roads));
+    
+    // Переходим на главную страницу
+    router.push('/home');
+}
 </script>
 
 <template>
@@ -47,7 +94,7 @@ const road = {
                 <input type="text" v-model="road.region">
             </div>
             <div class="modal-buttons">
-                <button @click="$router.push('/home')" class="submit-btn">Сохранить</button>
+                <button @click="saveRoad" class="submit-btn">Сохранить</button>
             </div>
         </form>
     </div>

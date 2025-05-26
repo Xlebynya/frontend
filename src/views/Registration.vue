@@ -102,6 +102,7 @@ export default {
 }
 
 .auth-form {
+  width: 300px;
   display: flex;
   flex-direction: column;
   gap: 15px;

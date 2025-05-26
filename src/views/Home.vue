@@ -102,24 +102,33 @@ export default defineComponent({
                 length: '',
                 region: ''
             } as RoadForm,
-            roads: [{
-                'id': 1,
-                'name': 'А-289',
-                'description': "Краснодар-Керч Скоростная дорога, открытая в декабре 2024 года",
-                'length': '180',
-                'region': 'Краснодар-Керч'
-            }] as Road[]
+            roads: [] as Road[]
         }
     },
     created() {
-        // Можно также загружать другие данные, если нужно
+        // Загрузка данных пользователя
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
             const user = JSON.parse(savedUser);
             this.surname = user.surname || '';
             this.name = user.name || '';
             this.password = user.password || '';
-            // и т.д.
+        }
+
+        // Загрузка сохраненных дорог из localStorage
+        const savedRoads = localStorage.getItem('roads');
+        if (savedRoads) {
+            this.roads = JSON.parse(savedRoads);
+        } else {
+            // Если дорог нет, добавляем пример по умолчанию
+            this.roads = [{
+                id: 1,
+                name: 'А-289',
+                description: "Краснодар-Керч Скоростная дорога, открытая в декабре 2024 года",
+                length: '180',
+                region: 'Краснодар-Керч'
+            }];
+            this.saveRoadsToLocalStorage();
         }
     },
     methods: {
@@ -128,15 +137,27 @@ export default defineComponent({
             router.push('/login')
         },
 
-        addNewRoad(): void {
+        saveRoadsToLocalStorage() {
+            localStorage.setItem('roads', JSON.stringify(this.roads));
+        },
+
+        addNewRoad() {
             if (this.newRoad.name && this.newRoad.description && this.newRoad.length && this.newRoad.region) {
+                // Генерируем новый ID как максимальный существующий + 1
+                const newId = this.roads.length > 0
+                    ? Math.max(...this.roads.map(road => road.id)) + 1
+                    : 1;
+
                 this.roads.push({
-                    id: Math.max(...this.roads.map(road => road.id)),
+                    id: newId,
                     name: this.newRoad.name,
                     description: this.newRoad.description,
                     length: this.newRoad.length,
                     region: this.newRoad.region
-                })
+                });
+
+                // Сохраняем в localStorage
+                this.saveRoadsToLocalStorage();
 
                 // Сброс формы и закрытие модального окна
                 this.newRoad = {
@@ -150,7 +171,9 @@ export default defineComponent({
         },
 
         removeRoad(index: number): void {
-            this.roads.splice(index, 1)
+            this.roads.splice(index, 1);
+            // Сохраняем изменения в localStorage
+            this.saveRoadsToLocalStorage();
         }
     }
 })
