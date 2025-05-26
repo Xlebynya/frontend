@@ -4,6 +4,7 @@ import Registration from '@/views/Registration.vue'
 import Home from '@/views/Home.vue'
 import Road from '@/views/Road.vue'
 import Forecasts from '@/views/Forecasts.vue'
+import Forgot from '@/views/Forgot.vue'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/reg',
     name: 'Registration',
     component: Registration,
+  },
+  {
+    path: '/forgot',
+    name: 'Forgot',
+    component: Forgot,
   },
   {
     path: '/home',

@@ -16,6 +16,7 @@
       <button type="button" @click="handleReg" v-show="!loading" class="submit-btn">
         Зарегистрироваться
       </button>
+      <a style="text-align: center; cursor: pointer;" href="/forgot">Забыли пароль</a>
 
       <div v-show="error !== ''" class="error-message">
         {{ error }}

@@ -1,26 +1,14 @@
 <template>
-  <div class="auth-container">
+  <div class="auth-container" style="width: 600px">
     <h2>Регистрация</h2>
     <form @submit.prevent="handleSubmit" class="auth-form">
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" v-model="email" required placeholder="Введите ваш email">
-
-        <label for="name">Имя:</label>
-        <input id="name" v-model="name" required placeholder="Введите имя">
-
-        <label for="surname">Фамилия:</label>
-        <input id="surname" v-model="surname" required placeholder="Введите фамилию">
-
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" v-model="password" required placeholder="Введите пароль">
-
-        <label for="submitpassword">Повторите пароль:</label>
-        <input type="password" id="submitpassword" v-model="submitpassword" required placeholder="Подтвердите пароль">
       </div>
 
       <button type="submit" :disabled="loading" class="submit-btn">
-        {{ loading ? 'Загрузка...' : 'Зарегистрироваться' }}
+        {{ loading ? 'Отправка..' : 'Восстановить пароль' }}
       </button>
       <button type="button" v-show="!loading" @click="handleLogin" class="submit-btn">
         Войти
@@ -60,21 +48,9 @@ export default {
         const users = JSON.parse(localStorage.getItem('users') || '[]');
         const userExists = users.some((user: any) => user.email === this.email);
 
-        if (userExists) {
-          throw new Error("Пользователь с таким email уже существует");
+        if (!userExists) {
+          throw new Error("Пользователя с таким email не существует");
         }
-
-        // Создаем нового пользователя
-        const newUser = {
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          password: this.password, // В реальном приложении пароль должен хешироваться!
-        };
-
-        // Добавляем в "базу данных" (localStorage)
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
 
         // Переходим на страницу входа
         this.$router.push('/login');
